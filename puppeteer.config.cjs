@@ -1,14 +1,13 @@
-/**
- * @license
- * Copyright 2020 Google Inc.
- * SPDX-License-Identifier: Apache-2.0
- */
+// puppeteer.config.cjs
 
-/**
- * @internal
- */
-export const PUPPETEER_REVISIONS = Object.freeze({
-  chrome: '138.0.7204.183',
-  'chrome-headless-shell': '138.0.7204.183',
-  firefox: 'stable_141.0',
-});
+module.exports = {
+  defaultBrowser: 'chromium',
+  browsers: [
+    {
+      name: 'chromium',
+      channel: 'stable',
+      platform: process.platform,
+      revision: '1256258' // Pinned revision chính thức, tương thích với Puppeteer 24.x
+    }
+  ]
+};
