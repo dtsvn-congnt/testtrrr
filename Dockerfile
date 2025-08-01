@@ -1,16 +1,16 @@
 FROM ghcr.io/puppeteer/puppeteer:latest
 
-# Set working directory
+# Switch to root user to avoid permission issues
+USER root
+
 WORKDIR /app
 
-# Force clean cache to avoid permission issue
+# Optional: set npm cache to avoid further EACCES
 ENV NPM_CONFIG_CACHE=/tmp/.npm
 
-# Copy package info and install dependencies
 COPY package*.json ./
-RUN npm install --no-optional --legacy-peer-deps
+RUN npm install --omit=optional --legacy-peer-deps
 
-# Copy remaining files
 COPY . .
 
 CMD ["npm", "start"]
