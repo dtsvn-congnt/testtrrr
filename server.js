@@ -2,9 +2,7 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const app = express();
-const { computeSystemExecutablePath } = require('@puppeteer/browsers');
-const puppeteer = require('puppeteer-core');
-
+const puppeteer = require('puppeteer');
 const dayjs = require('dayjs');
 const fs = require('fs');
 const path = require('path');
@@ -539,18 +537,7 @@ app.post('/actions', (req, res) => {
 
 // Hàm đăng nhập và lấy cookie, csrf token
 async function login() {
-   const executablePath = await computeSystemExecutablePath({
-    cacheDir: './node_modules/@puppeteer/browsers/.cache',
-    browser: 'chrome',
-    buildId: '1266938' // Chrome Stable revision phù hợp
-  });
-
-  const browser = await puppeteer.launch({
-    executablePath,
-    headless: 'new',
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
-
+  const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
   
   await page.goto('https://my.liquidandgrit.com/admin/login', { waitUntil: 'networkidle2' });
