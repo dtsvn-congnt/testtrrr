@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "postinstall": "npx @puppeteer/browsers install chrome"
+    "postinstall": "npx @puppeteer/browsers install chrome@1256258"
   },
   "dependencies": {
     "axios": "^1.9.0",
