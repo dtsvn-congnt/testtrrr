@@ -539,7 +539,6 @@ app.post('/actions', (req, res) => {
 async function login() {
   const browser = await puppeteer.launch({
   headless: 'new',
-  executablePath: path.resolve(__dirname, 'chrome-linux/chrome'),
   args: ['--no-sandbox', '--disable-setuid-sandbox']
 });
 
