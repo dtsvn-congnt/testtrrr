@@ -1,13 +1,13 @@
 // puppeteer.config.cjs
 
 module.exports = {
-  defaultBrowser: 'chromium',
+  defaultBrowser: 'chrome-headless-shell',
   browsers: [
     {
-      name: 'chromium',
+      name: 'chrome-headless-shell',
       channel: 'stable',
       platform: process.platform,
-      revision: '1256258' // Pinned revision chính thức, tương thích với Puppeteer 24.x
+      revision: '1256258' // Pinned revision chính thức tương thích Puppeteer 24.x
     }
   ]
 };
