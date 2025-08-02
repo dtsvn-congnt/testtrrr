@@ -377,19 +377,25 @@ app.post('/action', async (req, res) => {
  
     // return res.status(400).json({ error: 'dung xu ly' });
 
+    let strDate = ''
+     if (dayjs(from).month() === dayjs(to).month()) {
+    strDate = `${dayjs(from).date()}-${dayjs(to).date()}`;
+    } else {
+      strDate = `${dayjs(from).date()}-${dayjs(to).month() + 1}/${dayjs(to).date()}`;
+    }
     let str = '';
     if(type == 'nochanged') {
       str = 'No Change';
     } else {
       const extra = type == 'image' ? `/ image ` : (type == 'video' ? '/ image/ video ' : '');
-        str = (event.g_name || '') != '' ? `-Added tracker date ${extra}for ${event.g_name} ( ${event.name} )` : `-Added tracker date ${extra}for ${event.name}`
+        str = (event.g_name || '') != '' ? `-Added tracker date ${extra}for ${event.g_name} ( ${event.name} ) (${strDate})` : `-Added tracker date ${extra}for ${event.name} (${strDate})`
     }
      
     const params = {
       date: dayjs(date).format("DD/MM/YYYY"),
       name: event.game_name,
       events: [str]
-    }
+    } 
 
     response = await axios.post(GOOGLE_SCRIPT_URL, params, {
       headers: { "Content-Type": "application/json" }
