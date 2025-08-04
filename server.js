@@ -174,7 +174,7 @@ app.post('/upload', upload2.single('file'), async (req, res) => {
       return res.status(400).json({ error: 'Missing file' });
     }
 
-    const form = new FormData();
+    const form = new FormData1();
     for (const [key, value] of Object.entries(req.body)) {
       form.append(key, value);
     }
