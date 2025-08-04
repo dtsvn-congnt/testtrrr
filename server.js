@@ -161,36 +161,46 @@ app.post('/getInfo', async (req, res) => {
   }
 });
 
-app.post('/upload', upload.single('file'), async (req, res) => {
+const upload2 = multer({ dest: 'uploads/' });
+app.post('/upload', upload2.single('file'), async (req, res) => {
   try {
     const cookies = fs.existsSync('cookies.json') ? JSON.parse(fs.readFileSync('cookies.json')) : [];
 
     if (cookies.length === 0) {
-      res.status(500).json({ error: 'No cookies or CSRF token found. Please login first.' });
-      return;
+      return res.status(500).json({ error: 'No cookies or CSRF token found. Please login first.' });
     }
-    
-    let form = new FormData1();
+
+    if (!req.file) {
+      return res.status(400).json({ error: 'Missing file' });
+    }
+
+    const form = new FormData();
     for (const [key, value] of Object.entries(req.body)) {
       form.append(key, value);
     }
-    form.append('file', req.file.buffer, req.file.originalname);
 
-    const response = await axios.post('https://my.liquidandgrit.com/action/admin/cms/file-upload-v3', form, {
-      headers: {
-        Cookie: cookies.map(cookie => `${cookie.name}=${cookie.value}`).join('; '),
-        "Content-Type": "text/html; charset=UTF-8", 
-      },
-    });
+    // Stream file thay vì dùng buffer
+    const fileStream = fs.createReadStream(req.file.path);
+    form.append('file', fileStream, req.file.originalname);
 
-    // console.log(response);
-    
-    // const text = await response.text();
-    // res.status(response.status).send(text);
-    res.json({ success: true, result: "OK"});
+    const response = await axios.post(
+      'https://my.liquidandgrit.com/action/admin/cms/file-upload-v3',
+      form,
+      {
+        headers: {
+          ...form.getHeaders(),
+          Cookie: cookies.map(cookie => `${cookie.name}=${cookie.value}`).join('; ')
+        }
+      }
+    );
+
+    // Xóa file tạm sau khi gửi xong
+    fs.unlink(req.file.path, () => {});
+
+    res.json({ success: true, result: 'OK' });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Proxy error34');
+    res.status(500).send('Proxy error while uploading.');
   }
 });
 
