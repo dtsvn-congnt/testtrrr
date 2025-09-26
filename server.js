@@ -609,7 +609,7 @@ app.post('/upload-sqlite', upload1.single('sqlite_file'), (req, res) => {
 app.get('/template-sqlite.db', async (req, res, next) => {
   try {
     const filePath = path.resolve(__dirname, 'sample_game_db.sqlite');
-    await fs.access(filePath, constants.R_OK); // async, không block
+    await fs.access(filePath, 4); // async, không block
     res.download(filePath, 'template-sqlite.db');
   } catch (err) {
     if (err.code === 'ENOENT') return res.status(404).send('Không tìm thấy file mẫu');
