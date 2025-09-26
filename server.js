@@ -17,6 +17,8 @@ const { log } = require('console');
 const cheerio = require('cheerio');
 const { title } = require('process');
 const { type } = require('os');
+const { constants } = fs;
+
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzIlzn5gfKE38-mAGx1W7VCPfCu78nYDEnPmb6aUPVRl_dWALFthGYHFYbCSqyB0WLYw/exec";
@@ -609,7 +611,7 @@ app.post('/upload-sqlite', upload1.single('sqlite_file'), (req, res) => {
 app.get('/template-sqlite.db', async (req, res, next) => {
   try {
     const filePath = path.resolve(__dirname, 'sample_game_db.sqlite');
-    await fs.access(filePath, 4); // async, không block
+    await fs.access(filePath, constants.R_OK); // async, không block
     res.download(filePath, 'template-sqlite.db');
   } catch (err) {
     if (err.code === 'ENOENT') return res.status(404).send('Không tìm thấy file mẫu');
